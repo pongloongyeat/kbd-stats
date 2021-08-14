@@ -1,5 +1,3 @@
-import fileinput
-import json
 import keyboard
 import os
 from datetime import datetime
