@@ -35,19 +35,25 @@ def remove_terminate_session_key(key: str):
 
 
 def write_to_output():
+    print('Session ended')
+
     # Remove CTRL+C
     remove_terminate_session_key('ctrl')
     remove_terminate_session_key('c')
 
-    with open(os.path.join('outputs', f'output-log-{datetime.now().strftime("%Y-%m-%d %H-%M-%S")}.txt'), 'w') as f:
-        f.write(str(session))
-
-
-def main() -> None:
     if not os.path.exists('outputs'):
         os.makedirs('outputs')
 
+    with open(os.path.join('outputs', f'output-log-{datetime.now().strftime("%Y-%m-%d %H-%M-%S")}.txt'), 'w') as f:
+        f.write(str(session))
+
+    print(f'Wrote to outputs/output-log-{datetime.now().strftime("%Y-%m-%d %H-%M-%S")}.txt')
+
+
+def main() -> None:
     keyboard.hook(log_event)
+
+    print('Session started')
 
     try:
         keyboard.wait()
