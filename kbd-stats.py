@@ -1,3 +1,4 @@
+import json
 import keyboard
 import os
 from datetime import datetime
@@ -45,7 +46,7 @@ def write_to_output() -> None:
         os.makedirs('outputs')
 
     with open(os.path.join('outputs', f'output-log-{datetime.now().strftime("%Y-%m-%d %H-%M-%S")}.txt'), 'w') as f:
-        f.write(str(session))
+        f.write(json.dumps(session))
 
     print(f'Wrote to outputs/output-log-{datetime.now().strftime("%Y-%m-%d %H-%M-%S")}.txt')
 
