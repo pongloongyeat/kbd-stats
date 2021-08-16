@@ -24,7 +24,7 @@ def log_event(event: keyboard.KeyboardEvent) -> None:
         session[key_name]['up_count'] += 1
 
 
-def remove_terminate_session_key(key: str):
+def remove_terminate_session_key(key: str) -> None:
     try:
         session[key]['down_count'] -= 1
 
@@ -34,7 +34,7 @@ def remove_terminate_session_key(key: str):
         pass
 
 
-def write_to_output():
+def write_to_output() -> None:
     print('Session ended')
 
     # Remove CTRL+C
