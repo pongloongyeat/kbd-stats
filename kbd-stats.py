@@ -6,8 +6,8 @@ from datetime import datetime
 
 session = {}
 keystat = {
-    'down_count': 0,
-    'up_count': 0
+    'pressed_count': 0,
+    'released_count': 0
 }
 
 
@@ -22,11 +22,11 @@ def on_press(key: pynput.keyboard.Key) -> None:
         key_name = key.name
 
     try:
-        session[key_name]["down_count"]
+        session[key_name]["pressed_count"]
     except KeyError:
         session[key_name] = keystat.copy()
 
-    session[key_name]["down_count"] += 1
+    session[key_name]["pressed_count"] += 1
 
 
 def on_release(key: pynput.keyboard.Key) -> None:
@@ -40,18 +40,18 @@ def on_release(key: pynput.keyboard.Key) -> None:
         key_name = key.name
 
     try:
-        session[key_name]["up_count"]
+        session[key_name]["released_count"]
     except KeyError:
         session[key_name] = keystat.copy()
 
-    session[key_name]["up_count"] += 1
+    session[key_name]["released_count"] += 1
 
 
 def remove_terminate_session_key(key: str) -> None:
     try:
-        session[key]['down_count'] -= 1
+        session[key]['pressed_count'] -= 1
 
-        if session[key]['down_count'] == 0:
+        if session[key]['pressed_count'] == 0:
             dict.pop(session, key)
     except KeyError:
         pass
