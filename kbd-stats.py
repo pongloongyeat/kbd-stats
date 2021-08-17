@@ -1,6 +1,6 @@
 import json
-import keyboard
 import os
+import pynput
 from datetime import datetime
 
 
@@ -11,18 +11,40 @@ keystat = {
 }
 
 
-def log_event(event: keyboard.KeyboardEvent) -> None:
-    key_name = event.name.lower() + ('_keypad' if event.is_keypad else '')
+def on_press(key: pynput.keyboard.Key) -> None:
+    key_name = ""
 
     try:
-        session[key_name]['down_count']
+        # Alphanumeric key
+        key_name = key.char
+    except AttributeError:
+        # Special key
+        key_name = key.name
+
+    try:
+        session[key_name]["down_count"]
     except KeyError:
         session[key_name] = keystat.copy()
 
-    if event.event_type == keyboard.KEY_DOWN:
-        session[key_name]['down_count'] += 1
-    else:
-        session[key_name]['up_count'] += 1
+    session[key_name]["down_count"] += 1
+
+
+def on_release(key: pynput.keyboard.Key) -> None:
+    key_name = ""
+
+    try:
+        # Alphanumeric key
+        key_name = key.char
+    except AttributeError:
+        # Special key
+        key_name = key.name
+
+    try:
+        session[key_name]["up_count"]
+    except KeyError:
+        session[key_name] = keystat.copy()
+
+    session[key_name]["up_count"] += 1
 
 
 def remove_terminate_session_key(key: str) -> None:
@@ -52,12 +74,13 @@ def write_to_output() -> None:
 
 
 def main() -> None:
-    keyboard.hook(log_event)
-
     print('Session started')
 
     try:
-        keyboard.wait()
+        with pynput.keyboard.Listener(
+                on_press=on_press,
+                on_release=on_release) as listener:
+            listener.join()
     except KeyboardInterrupt:
         write_to_output()
 
